@@ -6,7 +6,7 @@ CREATE TYPE payment_means AS ENUM ('credit_card', 'paypal', 'stripe');
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- To create schema for User
-CREATE TABLE User(
+CREATE TABLE "User"(
     user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE User(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Property Scema
+-- Create Property Schema
 CREATE TABLE Property(
     property_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     host_id UUID NOT NULL,
@@ -27,10 +27,9 @@ CREATE TABLE Property(
     pricepernight DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_host FOREIGN KEY (host_id) REFERENCES User(user_id),
-
+    CONSTRAINT fk_host FOREIGN KEY (host_id) REFERENCES "User"(user_id)
 );
+
 CREATE OR REPLACE FUNCTION set_timestamp_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -41,7 +40,7 @@ $$ LANGUAGE plpgsql;
 
 -- Updated At TRIGGER
 CREATE TRIGGER trg_properties_updated_at
-  BEFORE UPDATE ON properties
+  BEFORE UPDATE ON Property
   FOR EACH ROW
   EXECUTE FUNCTION set_timestamp_updated_at();
 
@@ -55,21 +54,19 @@ CREATE TABLE Booking(
     total_price DECIMAL(10,2) NOT NULL,
     status booking_status NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_property FOREIGN KEY (property_id) REFERENCES Property(property_id);
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES User(user_id);
+    CONSTRAINT fk_property FOREIGN KEY (property_id) REFERENCES Property(property_id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 -- Payment
 CREATE TABLE Payment(
-    payment_id UUID PRIMARY KEY,
+    payment_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     booking_id UUID NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     payment_method payment_means NOT NULL,
-
-    CONSTRAINT fk_book FOREIGN KEY (booking_id) REFERENCES Booking(booking_id);
-)
+    CONSTRAINT fk_book FOREIGN KEY (booking_id) REFERENCES Booking(booking_id)
+);
 
 -- REVIEW
 CREATE TABLE Review(
@@ -79,20 +76,17 @@ CREATE TABLE Review(
     rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_comment FOREIGN KEY (property_id) REFERENCES Property(property_id);
-    CONSTRAINT fk_user FOREIGN KEY  (user_id) REFERENCES User(user_id);
+    CONSTRAINT fk_comment FOREIGN KEY (property_id) REFERENCES Property(property_id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
-
 
 -- Message
 CREATE TABLE Message(
-    message_id UUID PRIMARY KEY,
+    message_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     sender_id UUID NOT NULL,
     recipient_id UUID NOT NULL,
     message_body TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_sender FOREIGN KEY (sender_id) REFERENCES User(user_id);
-    CONSTRAINT fk_recipient FOREIGN KEY (urecipient_id) REFERENCES User(user_id);
+    CONSTRAINT fk_sender FOREIGN KEY (sender_id) REFERENCES "User"(user_id),
+    CONSTRAINT fk_recipient FOREIGN KEY (recipient_id) REFERENCES "User"(user_id)
 );
