@@ -4,7 +4,9 @@ GROUP BY property_id, rating
 HAVING rating > 4);
 
 
-SELECT user_id, COUNT(*) AS num_bookings
-FROM Booking
-GROUP BY user_id
-HAVING COUNT(*) > 3;
+SELECT "User".first_name, "User".last_name, COUNT(Booking) AS num_bookings
+FROM (Booking
+INNER JOIN "User" ON "User".user_id = Booking.user_id)
+GROUP BY first_name, last_name
+HAVING COUNT(Booking.user_id) > 3;
+
