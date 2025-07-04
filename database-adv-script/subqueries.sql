@@ -1,7 +1,7 @@
 SELECT description,location FROM Property
 WHERE property_id IN (SELECT property_id FROM Review
 GROUP BY property_id, rating
-HAVING rating > 4);
+HAVING AVG(rating) > 4.0);
 
 
 SELECT "User".first_name, "User".last_name, COUNT(Booking) AS num_bookings
