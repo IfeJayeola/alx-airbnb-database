@@ -24,7 +24,7 @@ JOIN Property ON Booking.property_id = Property.property_id;
 ```
 
 ## OUTPUT AFTER INDEXING
-'''
+```
 "Hash Join  (cost=3.35..4.83 rows=30 width=3820) (actual time=0.372..0.640 rows=30 loops=1)"
 "  Hash Cond: (booking.property_id = property.property_id)"
 "  ->  Hash Join  (cost=1.68..3.06 rows=30 width=2692) (actual time=0.213..0.371 rows=30 loops=1)"
@@ -38,6 +38,6 @@ JOIN Property ON Booking.property_id = Property.property_id;
 "        ->  Seq Scan on property  (cost=0.00..1.30 rows=30 width=1128) (actual time=0.044..0.089 rows=30 loops=1)"
 "Planning Time: 32.008 ms"
 "Execution Time: 0.752 ms"
-'''
+```
 
 > The Planning time went from 0.402ms to 32.008ms but execution time went from 0.791ms to 0.752ms. Therefore the time to run the code went up this is because the table is small
