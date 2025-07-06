@@ -7,7 +7,7 @@ JOIN "User" ON Booking.user_id = "User".user_id
 JOIN Property ON Booking.property_id = Property.property_id;
 
 ## OUTPUT BEFORE INDEXING
-'''
+```
 "Hash Join  (cost=2.45..3.62 rows=10 width=3820) (actual time=0.385..0.661 rows=30 loops=1)"
 "  Hash Cond: (booking.property_id = property.property_id)"
 "  ->  Hash Join  (cost=1.23..2.36 rows=10 width=2692) (actual time=0.216..0.380 rows=30 loops=1)"
@@ -21,8 +21,7 @@ JOIN Property ON Booking.property_id = Property.property_id;
 "        ->  Seq Scan on property  (cost=0.00..1.10 rows=10 width=1128) (actual time=0.035..0.082 rows=30 loops=1)"
 "Planning Time: 0.402 ms"
 "Execution Time: 0.791 ms"
-'''
-
+```
 
 ## OUTPUT AFTER INDEXING
 '''
