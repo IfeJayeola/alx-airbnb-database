@@ -1,3 +1,5 @@
+EXPLAIN ANALYZE
+
 CREATE INDEX idx_user
 ON "User" (first_name, last_name);
 
@@ -6,3 +8,5 @@ ON Property (description, location, pricepernight);
 
 CREATE INDEX idx_booking
 ON Booking (total_price, status)
+
+EXPLAIN ANALYZE
